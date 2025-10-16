@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>محل حلويات علي الديق</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: linear-gradient(135deg, #fdf6e3, #f5e6d3);
+            color: #5a3921;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        header {
+            text-align: center;
+            padding: 2.5rem 1.5rem;
+            background: linear-gradient(to right, #d4a76a, #b8860b);
+            color: white;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        header p {
+            font-size: 1.3rem;
+            opacity: 0.9;
+        }
+
+        .menu-section {
+            padding: 3rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .menu-section h2 {
+            text-align: center;
+            font-size: 2.4rem;
+            margin-bottom: 2.5rem;
+            color: #8b5a2b;
+            position: relative;
+        }
+
+        .menu-section h2::after {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.8rem;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .dish-card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.8rem;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            text-align: right;
+            cursor: pointer;
+        }
+
+        .dish-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .dish-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: #a67c52;
+        }
+
+        .dish-card p {
+            font-size: 1.05rem;
+            color: #6b4c3a;
+            line-height: 1.6;
+        }
+
+        .three-d-section {
+            padding: 3rem 2rem;
+            background: #fff9f0;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
+        .three-d-section h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1.8rem;
+            color: #8b5a2b;
+        }
+
+        #3d-container {
+            width: 95%;
+            max-width: 800px;
+            height: 450px;
+            margin: 0 auto;
+            background: #fdf8f0;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+            border: 3px solid #f0e0c9;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.8rem;
+            background: #5a3921;
+            color: #f9f1e6;
+            font-size: 1.1rem;
+        }
+
+        /* Modal Style */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            padding: 2rem;
+            text-align: right;
+            position: relative;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #a67c52;
+            font-weight: bold;
+        }
+
+        .modal-content h2 {
+            color: #8b5a2b;
+            margin-bottom: 1.2rem;
+            font-size: 2rem;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 1rem 0;
+            border: 2px solid #f0e0c9;
+        }
+
+        .modal-content p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #5a3921;
+        }
+
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 2.2rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+            }
+
+            .modal-content img {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>تعال و دوووق</h1>
+        <p>يبوي ع الحلاوه</p>
+    </header>
+
+    <section class="menu-section">
+        <h2>قايمه الكوتي موتي</h2>
+        <div class="menu-grid" id="menuGrid">
+            <!-- سيتم ملؤها بالجافا سكريبت -->
+        </div>
+    </section>
+
+    <section class="three-d-section">
+        <h2>كل سنه وانتي نور عيوني يعيونيييي</h2>
+        <div id="3d-container"></div>
+    </section>
+
+    <footer>
+        <p>&copy; كل يوم ولحظه و ثانيه و انا بحبك يروحي.</p>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal" id="detailModal">
+        <div class="modal-content">
+            <span class="close-btn" id="closeModal">&times;</span>
+            <h2 id="modalTitle">العنوان</h2>
+            <img id="modalImage" src="" alt="صورة الحلوى">
+            <p id="modalDescription">الوصف سيظهر هنا.</p>
+        </div>
+    </div>
+
+    <script>
+        // نتأكد أن الصفحة اكتملت قبل تنفيذ الكود
+        document.addEventListener('DOMContentLoaded', () => {
+            const desserts = [
+                {
+                    name: "الولا والبت",
+                    desc: "انتي قمريتي و كل و اغلي ما ليا و حبيت ابدا باكتر صوره انا و انتي بنحبها و كل سنه و انتي معايا و منوره دنيتي يروحي انا.",
+                    image: "2.jpeg"
+                },
+                {
+                    name: "القشطوطه",
+                    desc: "تتوصف بيكي الحلاوه و احلي من كل الصور والله العظيم و احلي من كل البشرررر عاااا بحباااااااك",
+                    image: "9.jpeg"
+                },
+                {
+                    name: "الهبه منها",
+                    desc: "اعسل و اجمل واحده تهب منها هي البت المزه بتاعتي والله وكل الحب ليها والله حببتي و مراتي المستقبله الهبه منها اوي اوي يعني",
+                    image: "8.jpeg"
+                },
+                {
+                    name: "الشغاله",
+                    desc: "ولا بقا و هي عملالي فيها استرونج اندبندنت ومان و عامله نفسها ثابته علي المبدا و بتاعت شغل ة اصلا نتجوز و هقعدها فالبيت و مش هتعبها لانها عيونييييي",
+                    image: "10.jpeg"
+                },
+                {
+                    name: "انا وهي بالريد فيلفيت",
+                    desc: "طبعا مش محتاج اقولك انها من اسمها معروف هي اني واحده بس اللي اقدر اقوله اني بحبك والله ينن عيوني و ربنا يخليكي ليا دايما يحياتي انا",
+                    image: "5.jpeg"
+                },
+                {
+                    name: "الشكوليطههه بتاعتي",
+                    desc: "لا ده كمالة عدد عشان مش هنزلك تغفيلات و صور عشان عيييب و عشان بحبك",
+                    image: "4.jpeg"
+                },
+                {
+                    name: "المتدلعه (اوي كمان)",
+                    desc: "من حق الكبير يتدلع بقا و ده حببتي و عيد ميلادها و لازم تدلع عليا بكل الطرق بقا يولا يولا ياللي احبك و احب انك تدلع عليا انا وبسس",
+                    image: "6.jpeg"
+                },
+                {
+                    name: "حبيب عيوني",
+                    desc: "يحيك يحيك و يحيك تاني و تالت و رابع و خامس و تالت و عاشر و مليون و يارب كل ثانيه تفضلي معايا و ليا يعيونيييي كل سنه و انتي طيبه و اجمل و اغلي مل ليااا اناا",
+                    image: "1.jpeg"
+                },
+                {
+                    name: "عروسه يماي",
+                    desc: "بحبك ياكسجين الروح انت يعسل ياللي مقويني اكمل كل حاجه و مقويني استحمل و اعافر قدام اي حد وبحبك بحبك بكل الطرق دايما",
+                    image: "3.jpeg"
+                },
+                {
+                    name: "توينكز!!",
+                    desc: "ده اكيد محشي كريمه و سكر وعسل ااااهع بحبك يبت يعسل انتي و بحب عيونك و بحبك كلككك",
+                    image: "7.jpeg"
+                }
+            ];
+
+            const menuGrid = document.getElementById('menuGrid');
+            if (!menuGrid) {
+                console.error("لم يتم العثور على عنصر menuGrid!");
+                return;
+            }
+
+            desserts.forEach(dessert => {
+                const card = document.createElement('div');
+                card.className = 'dish-card';
+                card.innerHTML = `
+          <h3>${dessert.name}</h3>
+          <p>${dessert.desc.substring(0, 80)}...</p>
+        `;
+                card.addEventListener('click', () => {
+                    document.getElementById('modalTitle').textContent = dessert.name;
+                    document.getElementById('modalDescription').textContent = dessert.desc;
+                    document.getElementById('modalImage').src = dessert.image;
+                    document.getElementById('detailModal').style.display = 'flex';
+                });
+                menuGrid.appendChild(card);
+            });
+
+            // إغلاق المودال
+            document.getElementById('closeModal').onclick = () => {
+                document.getElementById('detailModal').style.display = 'none';
+            };
+
+            window.onclick = (e) => {
+                if (e.target.id === 'detailModal') {
+                    document.getElementById('detailModal').style.display = 'none';
+                }
+            };
+
+            // ========== Three.js ==========
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0xfdf8f0);
+
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            const container = document.getElementById('3d-container');
+            if (container) {
+                renderer.setSize(container.offsetWidth, container.offsetHeight);
+                container.appendChild(renderer.domElement);
+            }
+
+            const cake = new THREE.Group();
+            const layers = [
+                { radius: 1.8, height: 0.4, y: -0.6, color: 0xd4a76a },
+                { radius: 1.4, height: 0.4, y: -0.1, color: 0xf5e6d3 },
+                { radius: 1.0, height: 0.4, y: 0.4, color: 0xe0c9a6 }
+            ];
+
+            layers.forEach(layer => {
+                const mesh = new THREE.Mesh(
+                    new THREE.CylinderGeometry(layer.radius, layer.radius, layer.height, 32),
+                    new THREE.MeshPhongMaterial({ color: layer.color })
+                );
+                mesh.position.y = layer.y;
+                cake.add(mesh);
+            });
+
+            const cherry = new THREE.Mesh(
+                new THREE.SphereGeometry(0.15, 16, 16),
+                new THREE.MeshPhongMaterial({ color: 0xc21807 })
+            );
+            cherry.position.set(0, 0.7, 0);
+            cake.add(cherry);
+
+            scene.add(cake);
+
+            scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            dirLight.position.set(5, 5, 5);
+            scene.add(dirLight);
+
+            function animate() {
+                requestAnimationFrame(animate);
+                cake.rotation.y += 0.01;
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                if (container) {
+                    camera.aspect = container.offsetWidth / container.offsetHeight;
+                    camera.updateProjectionMatrix();
+                    renderer.setSize(container.offsetWidth, container.offsetHeight);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
